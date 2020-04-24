@@ -31,3 +31,39 @@
         insert into account(uid, money) values(2,2140000)
 
 https://github.com/Be-ready/springboot.git
+
+修改错误：One2OneController.java中
+第一处：
+  @GetMapping("/update/{id}")
+    public Map<String, Object> updateUser(@PathVariable("id") Integer id){
+
+        Map<String,Object> map = new HashMap<>();
+
+//        User user = IUserMapper.getById(id);
+//        map.put("修改前", user);  // 会出现修改前和修改后数据除了性别改变其他没差别的问题
+        map.put("修改前", IUserMapper.getById(id));
+
+        User user = IUserMapper.getById(id);
+        user.setUsername("张胡子");
+        user.setSex("女");
+        user.setBoss(false);
+
+        IUserMapper.update(user);
+        map.put("修改后", IUserMapper.getById(id));
+        return map;
+    }
+
+第二处：
+    @GetMapping("/insert")
+    public Map<String,Object> insert(User user){
+
+        Map<String,Object> map = new HashMap<>();
+        user.setAddress("淮滨");
+        user.setBoss(false);
+        user.setSex("女");
+        user.setUsername("青青");
+        map.put("插入前", IUserMapper.getByName(user.getUsername()));
+        IUserMapper.insert(user);
+        map.put("插入后", IUserMapper.getByName(user.getUsername()));
+        return map;
+    }
